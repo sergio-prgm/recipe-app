@@ -1,9 +1,8 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import Link  from "next/link"
 import Layout from '../components/Layout'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: {session, ...pageProps} }: AppProps) {
   return (
       <Layout>
         <Component {...pageProps} />

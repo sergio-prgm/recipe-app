@@ -5,6 +5,7 @@ function Navbar () {
     <nav>
       <Link href="/">Home</Link>
       <Link href="/recipe/new">New Recipe</Link>
+      <Link href='/auth/login'>Login</Link>
     </nav>
   )
 }

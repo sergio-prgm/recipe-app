@@ -3,6 +3,8 @@ import { useForm, useFieldArray } from 'react-hook-form'
 // TODO form (import reactHookForm etc)
 
 export default function NewRecipe () {
+  // if (typeof window !== 'undefined') console.log(window.sessionStorage.getItem('jwt'))
+  
   return (
     <>
       <h1 className="text-4xl">Nueva receta</h1>
