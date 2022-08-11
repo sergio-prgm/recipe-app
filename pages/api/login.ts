@@ -7,20 +7,8 @@ type Data = {
 }
 
 const API = 'http://localhost:5194/login'
-  // const user = await fetch(API, {
-  //   method: 'POST',
-  //   headers: {
-  //     // 'Access-Control-Allow-Headers': '*',
-  //     // 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-  //     // 'Access-Control-Allow-Origin': '*',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({ name, email, password})
-  // })
-  // .then(res => {
-  //   if (!res.ok) throw new Error('response is not ok')
-  //   return res.json()
-  // })
+// TODO save info in Cookie
+// TODO API: return user info alongside jwt
 export default async function handler(
   req: NextApiRequest,
   res: any
