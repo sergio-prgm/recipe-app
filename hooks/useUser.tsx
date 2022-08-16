@@ -1,7 +1,8 @@
 import axios from "axios"
 import { SubmitHandler } from "react-hook-form"
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { AppContext } from '../pages/_app'
 
 type UserValues = {
   name: string
@@ -10,17 +11,21 @@ type UserValues = {
 }
 
 export default function useUser () {
+  const { jwt, setJwt, user, setUser } = useContext(AppContext)
+  const [ log, setLog ] = useState(false)
   const router = useRouter() 
 
   const login: SubmitHandler<UserValues> = async (values) => {
     try {
-      const { data: token} = await axios.post('/api/login', values)
-      console.log('¡¡ Logged in !!')
-      router.push('/')
+      const { data } = await axios.post('/api/login', values)
+      console.log('¡¡ Logged in !!', data)
+      setUser({ name: data['name'], id: data['id']})
 
       if (typeof window !== 'undefined') {
-        window.sessionStorage.setItem('jwt', token)
+        window.sessionStorage.setItem('jwt', data['token'])
       }
+      setLog(log => !log)
+      router.push('/')
     } catch (error) {
       console.error(error)
     }
@@ -28,8 +33,11 @@ export default function useUser () {
 
   const logout = (e: React.MouseEvent<HTMLButtonElement>)  => {
     e.preventDefault()
+    setUser(null)
     if (typeof window !== 'undefined') {
       window.sessionStorage.removeItem('jwt')
+      setLog(log => !log)
+      // setJwt(null)
       router.push('/')
     }
   }
@@ -38,16 +46,19 @@ export default function useUser () {
     //
   }
 
-  const isLoggedIn = () => {
-    const jwt = window.sessionStorage.getItem('jwt')
-    console.log(Boolean(jwt))
-    return Boolean(jwt)
-  }
+  const isLoggedIn = Boolean(jwt)
+
+  useEffect(() => {
+    console.log({log})
+    if (typeof window !== 'undefined') setJwt(window.sessionStorage.getItem('jwt'))
+  }, [log, setJwt])
 
   return {
     login,
     logout,
     register,
-    isLoggedIn
+    isLoggedIn,
+    jwt,
+    setJwt
   }
 }

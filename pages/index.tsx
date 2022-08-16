@@ -2,6 +2,7 @@ import Axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 function Home ({recipes}: {recipes: Recipe[]}) {
   console.log(recipes)
@@ -16,6 +17,7 @@ function Home ({recipes}: {recipes: Recipe[]}) {
         <h1 className='text-4xl text-indigo-500 my-4'>
           Recetas recientes
         </h1>
+        <p>string</p>
       </header>
       <main>
         <section>
@@ -29,10 +31,10 @@ function Home ({recipes}: {recipes: Recipe[]}) {
 const List = ({recipes}: {recipes: Recipe[]}) => {
   return (
     <ul className='flex justify-center items-center flex-col mx-4'>
-      {recipes.map((recipe: any) => {
+      {recipes.map((recipe: any, index) => {
         return (
           <li className='flex flex-col w-full mb-4 sm:flex-row sm:max-w-xl rounded-lg bg-white' key={recipe.id}>
-            <Card recipe={recipe} />
+            <Card recipe={recipe} index={index} />
           </li>
         )
       })}
@@ -40,7 +42,8 @@ const List = ({recipes}: {recipes: Recipe[]}) => {
   )
 }
 
-const Card = ({recipe}: {recipe: Recipe}) => {
+const Card = ({recipe, index}: {recipe: Recipe, index: number}) => {
+  // TODO limit img size 
   const src = recipe.imageUrl
   return (
     <>
@@ -50,6 +53,9 @@ const Card = ({recipe}: {recipe: Recipe}) => {
         width={348}
         height={348}
         alt={recipe.name}
+        unoptimized={true}
+        priority={index < 5 ? true : false}
+        // Research the unoptimized thing 
         className='w-full h-96 object-cover sm:h-auto sm:w-48 rounded-t-lg sm:rounded-none sm:rounded-l-lg'
       />
       <div className='p-6 flex flex-col justify-start'>

@@ -1,9 +1,11 @@
 import { useForm, useFieldArray } from 'react-hook-form'
+import { useContext } from 'react'
+import { AppContext } from '../_app'
+import axios from 'axios'
 
 // TODO form (import reactHookForm etc)
 
 export default function NewRecipe () {
-  // if (typeof window !== 'undefined') console.log(window.sessionStorage.getItem('jwt'))
   
   return (
     <>
@@ -25,6 +27,7 @@ interface FormRecipe {
   instructions: string
   description: string
   servings: string
+  rating: number // This should be deleted
   time: number
   userId: number
   tags: {name: string}[]
@@ -32,18 +35,16 @@ interface FormRecipe {
 }
 
 const Form = () => {
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: {errors}
-  } = useForm<FormRecipe>({
-    defaultValues: {
-      ingredients: [{name: '', quantity: 0, unit: ''}],
-      tags: [{ name: ''}]
-    },
-    mode: 'onBlur'
+  const { register, control, handleSubmit, formState: {errors} } 
+    = useForm<FormRecipe>({
+      defaultValues: {
+        ingredients: [{name: '', quantity: 0, unit: ''}],
+        tags: [{ name: ''}]
+      },
+      mode: 'onBlur'
   })
+
+  const { user } = useContext(AppContext)
 
   const { fields: iFields, append: iAppend, remove: iRemove } = useFieldArray({
     name: 'ingredients',
@@ -56,9 +57,16 @@ const Form = () => {
   })
 
   const onSubmit = (data: FormRecipe) => {
-    data.userId = 1
+    console.log(user)
+    if (!user) return console.log('Falta user!!!!') 
+    data.userId = user?.id
+    data.rating = 4
     data.imageUrl = 'https://seabreezemackay.com.au/shared/content/uploads/IMG_0206-2048x1365.jpg'
-    const splitInstr = data.instructions.replace(/\n/gi, '').trim().split('#')
+    // const splitInstr = data.instructions.replace(/\n/gi, '').trim().split('#')
+    axios.post('/api/newRecipe', data)
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
+
     console.log(data)
   }
 
@@ -96,7 +104,7 @@ const Form = () => {
         <input type='number' id='servings' placeholder='4' {...register('servings')} ></input>
       </label>
 
-      <label className='block'>Tiempo total de elaboración
+      <label className='block'>Tiempo total de elaboración (en minutos)
         <input type='number' id='time' placeholder='30' {...register('time')} ></input>
       </label>
 

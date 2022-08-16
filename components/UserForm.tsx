@@ -12,13 +12,12 @@ type UserValues = {
 
 export default function UserForm ({ submit } : { submit: SubmitHandler<UserValues>}) {
   const { handleSubmit, register, formState: {errors}} = useForm<UserValues>()
-  const router = useRouter()
   const [ logged, setLogged ] = useState(false)
   const { isLoggedIn, logout } = useUser()
 
   useEffect(() => {
-    setLogged(isLoggedIn())
-  }, [router.pathname, isLoggedIn])
+    setLogged(isLoggedIn)
+  }, [ isLoggedIn ])
 
   return logged ? ( 
     <>

@@ -9,7 +9,7 @@ function Navbar () {
   const [ logged, setLogged ] = useState(false)
 
   useEffect(() => {
-    setLogged(isLoggedIn())
+    setLogged(isLoggedIn)
   }, [router.pathname, isLoggedIn])
 
   return (
